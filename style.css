@@ -1,0 +1,31 @@
+body {
+	font-family: verdana;
+	background-color: rgb(215, 215, 215);
+	margin: 0;
+	padding: 0;
+	color: black;
+}
+
+div {
+	background-color: white;
+	margin: 10px;
+	padding: 10px;
+	color: black;
+}
+
+.canvas {
+	background-color: black;
+	margin: 0px;
+	padding: 0px;
+}
+
+.frame {
+	background-color: gray;
+	padding: 5px;
+	margin: 5px;
+	max-width: 1200px;
+}
+
+.instructions {
+	color: gray;
+}
