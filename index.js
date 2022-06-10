@@ -12,15 +12,20 @@ var resultElement;
 // Dominio e imagen
 var a = 0;
 var b = 10;
-var yi = -2;
-var yf = 2;
+var yi = -3;
+var yf = 3;
 
-// Divisiones
-var n = 15;
+// Divisiones / Cantidad total de puntos (MonteCarlo)
+var n = 1000;
+
+// Cotas (MonteCarlo)
+var m = 15;
 
 // Esta es una funcion placeholder. Mas adelante se tendra que interpretar la funcion ingresada por el usuario
 function Funcion(x) {
   return Math.sin(x) + Math.sin(x * 2.5) * 0.5 + 0.5;
+  //return Math.sin(x*x) + 2;
+  //return x*x*5 + Math.sin(x);
 }
 
 // Al cambiar los valores de los inputs:
@@ -55,7 +60,11 @@ function Calcular() {
   dibujarGrilla(a, b, yi, yf);
   dibujarCurva(Funcion);
   // Calcular integral
-  var resultado = calcularPorRectangulos(Funcion, a, b, n); // <-- Cambia calcularPorRectangulos por tu propia funcion para probarla
+  //var resultado = calcularPorRectangulos(Funcion, a, b, n); // <-- Cambia calcularPorRectangulos por tu propia funcion para probarla
+  //var resultado = calcularPorSimpson(Funcion, a, b, n);
+  //var resultado = calcularPorTrapecios(Funcion, a, b, n);
+  var resultado = calcularPorMonteCarlo(Funcion, a, b, n);
+  
   // Plasmar resultado en la pagina
   resultElement.innerHTML = "Resultado: " + resultado;
 }

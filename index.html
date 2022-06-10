@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="style.css">
 <script src="dibujo.js"></script>
 <script src="integracionporrectangulos.js"></script>
+<script src="integracionporsimpson.js"></script>
+<script src="integracionportrapecios.js"></script>
+<script src="integracionpormontecarlo.js"></script>
 <script src="index.js"></script>
 </head>
 <body onload="Start();">
@@ -14,6 +17,7 @@
 			<option value="rectangulos">Rectangulos</option>
 			<option value="trapecios">Trapecios</option>
 			<option value="simpson">Simpson</option>
+			<option value="simpson">Monte-Carlo</option>
 		</select>
 		<br><br>
 		<label>a: </label><input id="a-input" type="number" onchange="OnAChange(event)">
