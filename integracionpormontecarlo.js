@@ -8,7 +8,6 @@ Resuelve como lo vimos en clase.
 Verifico con: https://www.geogebra.org/m/jjvhfew6
 */
 function calcularPorMonteCarlo(func, a, b, n) {
-  
   // Cantidad de puntos que verifican yi <= f(xi)
   var cantPtosExitoPos = 0;
   var cantPtosExitoNeg = 0;
@@ -22,57 +21,49 @@ function calcularPorMonteCarlo(func, a, b, n) {
   //Cotas
   var cotaSup = 0;
   var cotaInf = 0;
-  
+
   // Busco cotas
-  for (var k = 0; k <=n; k++){
+  for (var k = 0; k <= n; k++) {
+    var y = func(a + h * k);
 
-    var y = func(a + h*k);
-
-    if (y > cotaSup){
+    if (y > cotaSup) {
       cotaSup = y;
     }
 
-    if (y < cotaInf){
+    if (y < cotaInf) {
       cotaInf = y;
     }
-
   }
 
   // Calcular H [Altura del rectangulo]
-  var altura = (cotaSup + eEst * Math.abs(cotaSup)) - (cotaInf - eEst * Math.abs(cotaInf));
+  var altura =
+    cotaSup + eEst * Math.abs(cotaSup) - (cotaInf - eEst * Math.abs(cotaInf));
 
-  // Calcular puntos aleatoreos 
+  // Calcular puntos aleatoreos
   for (var i = 0; i <= n; i++) {
+    var xi = a + Math.random() * (b - a);
+    var yi = cotaInf - eEst * Math.abs(cotaInf) + altura * Math.random();
 
-    var xi = a + Math.random() * (b-a);
-    var yi = (cotaInf - eEst * Math.abs(cotaInf) + altura * Math.random())
-    
     var fxi = func(xi);
-    
-    // Conteo de puntos de exito 
-    if (yi >= 0 && fxi >= 0 && yi <= fxi){
+
+    // Conteo de puntos de exito
+    if (yi >= 0 && fxi >= 0 && yi <= fxi) {
       cantPtosExitoPos++;
 
       colorDeRelleno("#0f0");
-      punto(xi, yi, 4);
-    }
-
-    else if (yi < 0 && fxi < 0 && yi >= fxi){
+      punto(xi, yi, 2);
+    } else if (yi < 0 && fxi < 0 && yi >= fxi) {
       cantPtosExitoNeg++;
 
       colorDeRelleno("#FF00FF");
-      punto(xi, yi, 4);
-    }
-
-    else {
+      punto(xi, yi, 2);
+    } else {
       // Dibujar
       colorDeRelleno("#ff000c");
-      punto(xi, yi, 4);
+      punto(xi, yi, 2);
     }
-
   }
 
   // Retornar resultado final
-  return ((cantPtosExitoPos-cantPtosExitoNeg)/n)*(b-a)*altura;
-  
+  return ((cantPtosExitoPos - cantPtosExitoNeg) / n) * (b - a) * altura;
 }

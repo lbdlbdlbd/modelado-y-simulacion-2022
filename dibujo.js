@@ -74,15 +74,17 @@ function rectangulo(x1, y1, x2, y2) {
   ctx.strokeRect(minx, miny, w, h);
 }
 
-// Dibujar un polígono dado un arreglo de puntos con formato {x, y} (no testeado)
+// Dibujar un polígono dado un arreglo de puntos con formato {x, y}
 function poligono(puntos) {
   ctx.beginPath();
-  ctx.moveTo(puntos[0].x, puntos[1].y);
-  for (var i = 1; i < puntos.Length; i++) {
-    ctx.lineTo(puntos[i].x, puntos[i].y);
+  ctx.moveTo(xGrilla(puntos[0].x), yGrilla(puntos[0].y));
+  for (var i = 1; i < puntos.length; i++) {
+    ctx.lineTo(xGrilla(puntos[i].x), yGrilla(puntos[i].y));
+    //linea(puntos[i].x, puntos[i].y, puntos[i + 1].x, puntos[i + 1].y);
   }
-  ctx.fill();
+  ctx.closePath();
   ctx.stroke();
+  ctx.fill();
 }
 
 // Dibujar el fondo de la gráfica y limpiar la pantalla
@@ -126,4 +128,32 @@ function dibujarCurva(func) {
     linea(i, valorAnterior, i + intervalo, valorSiguiente);
     valorAnterior = valorSiguiente;
   }
+}
+
+function parabolaPor3Puntos(xi, yi, xm, ym, xf, yf) {
+  function midPoints(xi, yi, xm, ym, xf, yf) {
+    const curvature = (ym * 2 - yf - yi) / 8;
+    var x1 = (xi + xm) / 2;
+    var y1 = (yi + ym) / 2 + curvature;
+    var x2 = (xm + xf) / 2;
+    var y2 = (ym + yf) / 2 + curvature;
+    return { x1: x1, y1: y1, x2: x2, y2: y2 };
+  }
+
+  var mids = midPoints(xi, yi, xm, ym, xf, yf);
+  var leftMids = midPoints(xi, yi, mids.x1, mids.y1, xm, ym);
+  var rightMids = midPoints(xm, ym, mids.x2, mids.y2, xf, yf);
+  poligono([
+    { x: xi, y: 0 },
+    { x: xi, y: yi },
+    { x: leftMids.x1, y: leftMids.y1 },
+    { x: mids.x1, y: mids.y1 },
+    { x: leftMids.x2, y: leftMids.y2 },
+    { x: xm, y: ym },
+    { x: rightMids.x1, y: rightMids.y1 },
+    { x: mids.x2, y: mids.y2 },
+    { x: rightMids.x2, y: rightMids.y2 },
+    { x: xf, y: yf },
+    { x: xf, y: 0 },
+  ]);
 }

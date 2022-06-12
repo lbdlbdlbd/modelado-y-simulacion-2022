@@ -15,8 +15,11 @@ var b = 10;
 var yi = -3;
 var yf = 3;
 
+// Metodo
+var method = 0;
+
 // Divisiones / Cantidad total de puntos (MonteCarlo)
-var n = 1000;
+var n = 20;
 
 // Cotas (MonteCarlo)
 var m = 15;
@@ -29,17 +32,17 @@ function Funcion(x) {
 }
 
 // Al cambiar los valores de los inputs:
+function OnMethodChange(event) {
+  method = Number(event.target.value);
+}
 function OnAChange(event) {
   a = Number(event.target.value);
-  Calcular();
 }
 function OnBChange(event) {
   b = Number(event.target.value);
-  Calcular();
 }
 function OnNChange(event) {
   n = Number(event.target.value);
-  Calcular();
 }
 
 // Start se llama al cargarse el documento
@@ -51,22 +54,59 @@ function Start() {
   // Obtener referencia a los elementos de html para poder cambiar el texto
   resultElement = document.getElementById("Resultado");
   // Calcular la integral y dibujarla
-  Calcular();
+}
+
+function CalcularAltura(func, a, b, n) {
+  yi = 0;
+  yf = 0;
+  // Busco cotas
+  const h = (b - a) / 100;
+  const iteraciones = 100;
+  for (var k = 0; k <= iteraciones; k++) {
+    var y = func(a + h * k);
+
+    if (y > yf) {
+      yf = y;
+    }
+
+    if (y < yi) {
+      yi = y;
+    }
+  }
+  const altura = yf - yi;
+  yf = yf + altura / 10;
+  yi = yi - altura / 10;
 }
 
 // Calcular y dibujar la integral
-function Calcular() {
+function CalcularRapido() {
+  CalcularAltura(Funcion, a, b, n);
   // Redibujar grilla y funcion
   dibujarGrilla(a, b, yi, yf);
   dibujarCurva(Funcion);
   // Calcular integral
-  //var resultado = calcularPorRectangulos(Funcion, a, b, n); // <-- Cambia calcularPorRectangulos por tu propia funcion para probarla
-  //var resultado = calcularPorSimpson(Funcion, a, b, n);
-  //var resultado = calcularPorTrapecios(Funcion, a, b, n);
-  var resultado = calcularPorMonteCarlo(Funcion, a, b, n);
-  
+  var resultado;
+  switch (method) {
+    case 0:
+      resultado = calcularPorRectangulos(Funcion, a, b, n);
+      break;
+    case 1:
+      resultado = calcularPorTrapecios(Funcion, a, b, n);
+      break;
+    case 2:
+      resultado = calcularPorSimpson(Funcion, a, b, n);
+      break;
+    case 3:
+      resultado = calcularPorMonteCarlo(Funcion, a, b, n);
+      break;
+  }
+
   // Plasmar resultado en la pagina
   resultElement.innerHTML = "Resultado: " + resultado;
+}
+
+function CalcularAnimado() {
+  alert("Calculo animado no implementado todavia");
 }
 
 //function Update() {} // <-- Esto va a ser util mas adelante cuando necesite hacer animaciones

@@ -10,19 +10,22 @@
 <script src="index.js"></script>
 </head>
 <body onload="Start();">
-	
 	<div>
+		<label>Equacion: </label><input id="equation" type="text" value="sin(x)" onchange="OnEquationChange(event)">
+		<br><br>
 		<label for="metodo">Metodo:</label>
-		<select name="metodo" id="metodo">
-			<option value="rectangulos">Rectangulos</option>
-			<option value="trapecios">Trapecios</option>
-			<option value="simpson">Simpson</option>
-			<option value="simpson">Monte-Carlo</option>
+		<select name="metodo" id="metodo" onchange="OnMethodChange(event)">
+			<option value="0">Rectangulos</option>
+			<option value="1">Trapecios</option>
+			<option value="2">Simpson</option>
+			<option value="3">Monte-Carlo</option>
 		</select>
 		<br><br>
-		<label>a: </label><input id="a-input" type="number" onchange="OnAChange(event)">
-		<label>b: </label><input id="b-input" type="number" onchange="OnBChange(event)">
-		<label>N: </label><input id="n-input" type="number" onchange="OnNChange(event)">
+		<label>a: </label><input id="a-input" type="number" value="0" onchange="OnAChange(event)">
+		<label>b: </label><input id="b-input" type="number" value="10" onchange="OnBChange(event)">
+		<label>N: </label><input id="n-input" type="number" value="20" onchange="OnNChange(event)">
+		<button onclick="CalcularRapido()">Calculo instantáneo</button>
+		<button onclick="CalcularAnimado()">Calculo animado</button>
 	</div>
 	<div>
 		<p class="info" id="Resultado">Resultado: </p>
