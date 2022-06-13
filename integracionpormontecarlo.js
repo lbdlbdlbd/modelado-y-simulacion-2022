@@ -39,6 +39,8 @@ function calcularPorMonteCarlo(func, a, b, n) {
   var altura =
     cotaSup + eEst * Math.abs(cotaSup) - (cotaInf - eEst * Math.abs(cotaInf));
 
+  var puntosAAnimar = [];
+
   // Calcular puntos aleatoreos
   for (var i = 0; i <= n; i++) {
     var xi = a + Math.random() * (b - a);
@@ -49,21 +51,40 @@ function calcularPorMonteCarlo(func, a, b, n) {
     // Conteo de puntos de exito
     if (yi >= 0 && fxi >= 0 && yi <= fxi) {
       cantPtosExitoPos++;
-
-      colorDeRelleno("#0f0");
-      punto(xi, yi, 2);
+      puntosAAnimar.push({ x: xi, y: yi, contribucion: 1 });
     } else if (yi < 0 && fxi < 0 && yi >= fxi) {
       cantPtosExitoNeg++;
-
-      colorDeRelleno("#FF00FF");
-      punto(xi, yi, 2);
+      puntosAAnimar.push({ x: xi, y: yi, contribucion: -1 });
     } else {
-      // Dibujar
-      colorDeRelleno("#ff000c");
-      punto(xi, yi, 2);
+      puntosAAnimar.push({ x: xi, y: yi, contribucion: 0 });
     }
   }
 
   // Retornar resultado final
-  return ((cantPtosExitoPos - cantPtosExitoNeg) / n) * (b - a) * altura;
+  return {
+    integral: ((cantPtosExitoPos - cantPtosExitoNeg) / n) * (b - a) * altura,
+    animacion: puntosAAnimar,
+  };
+}
+
+function animarMontecarlo(animacion, t) {
+  const snappiness = 20;
+  for (let i = 0; i < animacion.length; i++) {
+    let r = animacion[i];
+    let rt = sigmoide(((t - i - 1) * snappiness) / velocidadDeAnimacion);
+    if (t > i) {
+      switch (r.contribucion) {
+        case -1:
+          colorDeRelleno("#f00");
+          break;
+        case 0:
+          colorDeRelleno("#888");
+          break;
+        case 1:
+          colorDeRelleno("#0f0");
+          break;
+      }
+      punto(r.x, r.y * rt, 3 * rt);
+    }
+  }
 }

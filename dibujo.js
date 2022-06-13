@@ -157,3 +157,18 @@ function parabolaPor3Puntos(xi, yi, xm, ym, xf, yf) {
     { x: xf, y: 0 },
   ]);
 }
+
+function sigmoide(x) {
+  if (x < -6) return 0;
+  if (x > 6) return 1;
+  const ex = Math.pow(2.718, x);
+  return ex / (ex + 1);
+}
+
+function font(txt) {
+  ctx.font(txt);
+}
+
+function texto(txt, x, y) {
+  ctx.fillText(txt, xGrilla(x), yGrilla(y));
+}

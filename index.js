@@ -2,9 +2,10 @@
 var canvas;
 var ctx;
 
-// Esto se usará mas adelante para hacer animaciones
-//var time = 0;
-//var elapsed_time = 1 / 30;
+var time = 0;
+var elapsed_time = 1 / 60;
+var velocidadDeAnimacion = 0;
+var velocidadElegida = 1;
 
 // Elementos html
 var resultElement;
@@ -17,12 +18,15 @@ var yf = 3;
 
 // Metodo
 var method = 0;
+var animatingMethod = 0;
 
 // Divisiones / Cantidad total de puntos (MonteCarlo)
 var n = 20;
 
 // Cotas (MonteCarlo)
 var m = 15;
+
+var animacion;
 
 // Esta es una funcion placeholder. Mas adelante se tendra que interpretar la funcion ingresada por el usuario
 function Funcion(x) {
@@ -32,6 +36,9 @@ function Funcion(x) {
 }
 
 // Al cambiar los valores de los inputs:
+function OnSpeedChange(event) {
+  velocidadElegida = Number(event.target.value);
+}
 function OnEquationChange(event) {
   expression = event.target.value;
 }
@@ -50,7 +57,7 @@ function OnNChange(event) {
 
 // Start se llama al cargarse el documento
 function Start() {
-  //setInterval(Update, elapsed_time * 1000);  // <-- Esto va a ser util mas adelante cuando necesite hacer animaciones
+  setInterval(Update, elapsed_time * 1000); // <-- Esto va a ser util mas adelante cuando necesite hacer animaciones
   // Obtener el canvas para poder dibujar
   canvas = document.getElementById("mycanvas");
   ctx = canvas.getContext("2d");
@@ -81,12 +88,27 @@ function CalcularAltura(func, a, b, n) {
   yi = yi - altura / 10;
 }
 
-// Calcular y dibujar la integral
 function CalcularRapido() {
-  CalcularAltura(Funcion, a, b, n);
-  // Redibujar grilla y funcion
-  dibujarGrilla(a, b, yi, yf);
-  dibujarCurva(Funcion);
+  time = 10000000;
+  velocidadDeAnimacion = 10000000;
+  Calcular();
+}
+
+function CalcularAnimado() {
+  time = 0;
+  velocidadDeAnimacion = velocidadElegida;
+  Calcular();
+}
+
+// Calcular y dibujar la integral
+function Calcular() {
+  if (n <= 0) {
+    alert("'n' debe ser mayor que 0");
+    velocidadDeAnimacion = 0;
+    return;
+  }
+
+  animatingMethod = method;
   // Calcular integral
   var resultado;
   switch (method) {
@@ -104,12 +126,39 @@ function CalcularRapido() {
       break;
   }
 
+  CalcularAltura(Funcion, a, b, n);
   // Plasmar resultado en la pagina
-  resultElement.innerHTML = "Resultado: " + resultado;
+  resultElement.innerHTML = "Resultado: " + resultado.integral;
+  animacion = resultado.animacion;
 }
 
-function CalcularAnimado() {
-  alert("Calculo animado no implementado todavia");
+function Update() {
+  if (velocidadDeAnimacion > 0) {
+    Render();
+    time = time + velocidadDeAnimacion * elapsed_time;
+    if (time > n + velocidadDeAnimacion) {
+      velocidadDeAnimacion = 0;
+      console.log("Finished");
+    }
+  }
 }
 
-//function Update() {} // <-- Esto va a ser util mas adelante cuando necesite hacer animaciones
+function Render() {
+  // Redibujar grilla y funcion
+  dibujarGrilla(a, b, yi, yf);
+  dibujarCurva(Funcion);
+  switch (animatingMethod) {
+    case 0:
+      resultado = animarRectangulos(animacion, time);
+      break;
+    case 1:
+      resultado = animarTrapecios(animacion, time);
+      break;
+    case 2:
+      resultado = animarSimpson(animacion, time);
+      break;
+    case 3:
+      resultado = animarMontecarlo(animacion, time);
+      break;
+  }
+}
