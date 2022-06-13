@@ -32,6 +32,9 @@ function Funcion(x) {
 }
 
 // Al cambiar los valores de los inputs:
+function OnEquationChange(event) {
+  expression = event.target.value;
+}
 function OnMethodChange(event) {
   method = Number(event.target.value);
 }
