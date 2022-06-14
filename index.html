@@ -12,7 +12,7 @@
 </head>
 <body onload="Start();">
 	<div>
-		<label>Equacion: </label><input id="equation" type="text" value="sin(x)" onchange="OnEquationChange(event)">
+		<label>Equacion: </label><input id="equation" type="text" value="x*x*x*0.5 - x*x+7/3" onchange="OnEquationChange(event)"><label>  Palabras clave: abs(), sqrt(), sin(), cos(), tan()</label>
 		<br><br>
 		<label for="metodo">Metodo:</label>
 		<select name="metodo" id="metodo" onchange="OnMethodChange(event)">
@@ -22,8 +22,8 @@
 			<option value="3">Monte-Carlo</option>
 		</select>
 		<br><br>
-		<label>a: </label><input id="a-input" type="number" value="0" onchange="OnAChange(event)">
-		<label>b: </label><input id="b-input" type="number" value="10" onchange="OnBChange(event)">
+		<label>a: </label><input id="a-input" type="number" value="-2" onchange="OnAChange(event)">
+		<label>b: </label><input id="b-input" type="number" value="2" onchange="OnBChange(event)">
 		<label>N: </label><input id="n-input" type="number" value="20" onchange="OnNChange(event)">
 		<br><br>
 		<button onclick="CalcularRapido()">Calculo instantáneo</button><br><br>

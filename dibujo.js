@@ -106,12 +106,21 @@ function dibujarGrilla(_xi, _xf, _yi, _yf) {
   color("#fff3");
   grosor(1);
   // Dibujar subdivisiones
-  for (var x = xi; x <= xf; x++) {
-    linea(x, yi, x, yf);
+  if (xf - xi < 250) {
+    for (var x = xi; x <= xf; x++) {
+      linea(x, yi, x, yf);
+    }
   }
-  for (var y = yi; y <= yf; y++) {
-    linea(xi, y, xf, y);
+  if (yf - yi < 150) {
+    for (var y = yi; y <= yf; y++) {
+      linea(xi, y, xf, y);
+    }
   }
+
+  color("#fff");
+  font("18px Arial");
+  texto(" " + redondear(yiSinMargen), 0, yiSinMargen);
+  texto(" " + redondear(yfSinMargen), 0, yfSinMargen);
 }
 
 // Dibujar la curva de la funcion
@@ -119,14 +128,19 @@ function dibujarCurva(func) {
   grosor(1);
   color("#fff");
   const segmentos = 256;
-  const intervaloCanvas = canvasXf - canvasXi;
-  const intervalo = Math.max(0.1, Math.abs((xf - xi) / segmentos));
+  const intervalo = Math.max(0.01, Math.abs((xf - xi) / segmentos));
   var valorAnterior = func(a);
 
   for (var i = a; i < b; i += intervalo) {
     const valorSiguiente = func(i + intervalo);
     linea(i, valorAnterior, i + intervalo, valorSiguiente);
     valorAnterior = valorSiguiente;
+  }
+
+  if (xi <= 0 && xf >= 0) {
+    const func0 = func(0);
+    font("18px Arial");
+    texto(" " + redondear(func0), 0, func0);
   }
 }
 
@@ -166,9 +180,13 @@ function sigmoide(x) {
 }
 
 function font(txt) {
-  ctx.font(txt);
+  ctx.font = txt;
 }
 
 function texto(txt, x, y) {
   ctx.fillText(txt, xGrilla(x), yGrilla(y));
+}
+
+function redondear(n) {
+  return Math.round(n * 100) / 100;
 }

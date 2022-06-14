@@ -11,10 +11,12 @@ var velocidadElegida = 1;
 var resultElement;
 
 // Dominio e imagen
-var a = 0;
-var b = 10;
+var a = -2;
+var b = 2;
 var yi = -3;
 var yf = 3;
+var yiSinMargen = -3;
+var yfSinMargen = 3;
 
 // Metodo
 var method = 0;
@@ -27,12 +29,21 @@ var n = 20;
 var m = 15;
 
 var animacion;
+var expression = "x*x*x*0.5 - x*x+7/3";
 
 // Esta es una funcion placeholder. Mas adelante se tendra que interpretar la funcion ingresada por el usuario
 function Funcion(x) {
-  return Math.sin(x) + Math.sin(x * 2.5) * 0.5 + 0.5;
-  //return Math.sin(x*x) + 2;
-  //return x*x*5 + Math.sin(x);
+  try {
+    return eval(expression);
+  } catch {
+    alert("Expresion inválida");
+    FrenarAnimacion();
+  }
+}
+
+function FrenarAnimacion() {
+  velocidadDeAnimacion = 0;
+  expression = "";
 }
 
 // Al cambiar los valores de los inputs:
@@ -41,6 +52,21 @@ function OnSpeedChange(event) {
 }
 function OnEquationChange(event) {
   expression = event.target.value;
+  // Seguridad
+  expression = expression.replace(/\(\)/g, "");
+  expression = expression.replace(/{/g, "");
+  expression = expression.replace(/}/g, "");
+  // Expresiones matematicas
+  expression = expression.replace(/abs\(/g, "Math.abs(");
+  expression = expression.replace(/tan\(/g, "Math.tan(");
+  expression = expression.replace(/sin\(/g, "Math.sin(");
+  expression = expression.replace(/cos\(/g, "Math.cos(");
+  expression = expression.replace(/sqrt\(/g, "Math.sqrt(");
+  expression = expression.replace(/x\^2/g, "x*x");
+  expression = expression.replace(/x\^3/g, "x*x*x");
+  expression = expression.replace(/x\^4/g, "x*x*x*x");
+  expression = expression.replace(/x\^5/g, "x*x*x*x*x");
+  expression = expression.replace(/x\^6/g, "x*x*x*x*x*x");
 }
 function OnMethodChange(event) {
   method = Number(event.target.value);
@@ -83,6 +109,8 @@ function CalcularAltura(func, a, b, n) {
       yi = y;
     }
   }
+  yiSinMargen = yi;
+  yfSinMargen = yf;
   const altura = yf - yi;
   yf = yf + altura / 10;
   yi = yi - altura / 10;
@@ -128,7 +156,8 @@ function Calcular() {
 
   CalcularAltura(Funcion, a, b, n);
   // Plasmar resultado en la pagina
-  resultElement.innerHTML = "Resultado: " + resultado.integral;
+  resultElement.innerHTML =
+    "Resultado: " + Math.round(resultado.integral * 10000000) / 10000000;
   animacion = resultado.animacion;
 }
 
